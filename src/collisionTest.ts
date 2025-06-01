@@ -3,6 +3,8 @@ import { Planet } from "./planet";
 import * as CANNON from 'cannon-es';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import CannonDebugRenderer from "./debugCollision/cannonDebugRenderer";
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 
 export class collisionTest{
 	scene: THREE.Scene;
@@ -33,6 +35,8 @@ export class collisionTest{
 
 	get cameraFunc() { return this.camera; }
 
+	loader: FontLoader = new FontLoader();
+
 	constructor(scene : THREE.Scene, planet : Planet, camera : THREE.PerspectiveCamera) {
 		this.scene = scene;
 		this.clock = new THREE.Clock();
@@ -57,7 +61,6 @@ export class collisionTest{
 
 		this.planetBody = this.generatePlanetCollider(this.groundMaterial);
 		this.world.addBody(this.planetBody);
-
 		this.sphere = this.createSphere();
 		this.scene.add(this.sphere);
 
@@ -72,7 +75,6 @@ export class collisionTest{
 		window.addEventListener('keyup', this.keyUpFunc);
 		document.addEventListener('mousemove', this.mouseMoveFunc);
 		this.world.addEventListener('postStep', this.stepFunc);
-
 		this.yawObject = new THREE.Object3D();
 
 		// this.collider = this.generatePlanetColliderDebug();

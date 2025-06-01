@@ -16,6 +16,7 @@ export class Planet {
 
     get Settings() { return this.#settings }
     get Mesh() { return this.#sphere }
+    getPosition(): THREE.Vector3 {return this.#sphere?.position.clone() ?? new THREE.Vector3(0, 0, 0);}
 
     UpdateMesh() {
         this.UpdateUniforms()

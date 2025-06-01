@@ -5,7 +5,7 @@ import { Settings } from "./settings"
 import { collisionTest } from "./collisionTest.ts";
 import { stars } from "./stars.ts";
 import { disposeTardis, loadTardis, updateTardis } from './tardis.ts';
-import { loadMelon, disposeMelon, spawnCloud, disposeClouds} from './melon.ts';
+import { loadMelon, disposeMelon, spawnCloud, disposeClouds, melonModel } from './melon.ts';
 import { loadWormhole, updateWormhole, loadLightning, updateLightning } from './wormhole.ts';
 import { Sun } from "./sun.ts";
 import { Sky } from "./skycolor.js";
@@ -40,6 +40,7 @@ class Global {
         this.#generateNewCount++;
         THREE.ColorManagement.enabled = false;
         this.#settings.Randomise(Math.random() * 100)
+        this.#generateNewCount++;
         if (this.ActivePlanet != null) {
             this.ActivePlanet.Mesh?.geometry.dispose()
             if (this.ActivePlanet.Mesh?.material instanceof Array)
@@ -182,4 +183,37 @@ class Global {
 }
 }
 
+    mouseMove(event: MouseEvent) {
+        this.#mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        this.#mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    }
+
+    mouseClick(event: MouseEvent) {
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(this.#mouse, this.#camera);
+    const intersects = raycaster.intersectObjects(this.#scene.children, true);
+
+    if (intersects.length > 0) {
+        const clickedObject = intersects[0].object;
+
+        if (clickedObject.name === "Glass_Box") {
+            console.log("tardistime");
+            this.GenerateNewPlanet();
+        }
+
+    let object = clickedObject;
+        while (object) {
+            if (object.name === "MELON") {
+                console.log("melontime");
+                if (this.#melonEatSound && this.#melonEatSound.buffer) {
+                    this.#melonEatSound.play();
+                }
+                disposeMelon(this.#scene);
+                break;
+                }
+            object = object.parent;
+            }
+        }
+    }
+}
 new Global()
